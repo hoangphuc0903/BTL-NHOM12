@@ -281,3 +281,53 @@ public:
         return tong;
     }
 };
+
+class HoaDon{
+private:
+    int maHD,maBan;
+    int hMo,pMo;
+    int hDong,pDong;
+    double tongTien;
+public:
+    HoaDon(int mhd,
+           int mb,
+           int hm,
+           int pm,
+           int hd,
+           int pd,
+           double tong){
+        maHD = mhd;
+        maBan = mb;
+        hMo = hm;
+        pMo = pm;
+        hDong = hd;
+        pDong = pd;
+        tongTien = tong;
+    }
+    double getTongTien() const{
+        return tongTien;
+    }
+    void xuat() const{
+        string tg;
+        if(hMo < 10) tg += "0";
+        tg += to_string(hMo) + ":";
+        if(pMo < 10) tg += "0";
+        tg += to_string(pMo);
+        tg += " - ";
+        if(hDong < 10) tg += "0";
+        tg += to_string(hDong) + ":";
+        if(pDong < 10) tg += "0";
+        tg += to_string(pDong);
+        cout << "| "
+             << left  << setw(5)  << maHD
+             << "| "
+             << left  << setw(5)  << maBan
+             << "| "
+             << left  << setw(13) << tg
+             << "| "
+             << right << setw(12)
+             << fixed << setprecision(0)
+             << tongTien
+             << " |\n";
+    }
+};
