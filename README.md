@@ -99,4 +99,58 @@ public:
              << " |\n";
     }
 };
-
+class NhanVien : public ConNguoi{
+private:
+    double luong;
+    string chucVu;
+public:
+    void nhap() override{
+        ten = nhapString("Nhap ten NV: ");
+        sdt = nhapString("Nhap SDT NV: ");
+        chucVu = nhapString("Nhap chuc vu: ");
+        luong = nhapInt("Nhap luong: ");
+    }
+    void xuat() const override{
+        cout << "| "
+             << left  << setw(15) << ten
+             << "| "
+             << left  << setw(12) << sdt
+             << "| "
+             << left  << setw(12) << chucVu
+             << "| "
+             << right << setw(10)
+             << fixed << setprecision(0)
+             << luong
+             << " |\n";
+    }
+};
+class DoUong{
+private:
+    int ma;
+    string ten;
+    double gia;
+public:
+    void setDU(int m,string t,double g){
+        ma = m;
+        ten = t;
+        gia = g;
+    }
+    int getMa() const { return ma; }
+    string getTen() const { 
+        return ten; 
+    }
+    double getGia() const { 
+        return gia; 
+    }
+    void xuat() const{
+        cout << "| "
+             << left  << setw(5)  << ma
+             << "| "
+             << left  << setw(20) << ten
+             << "| "
+             << right << setw(10)
+             << fixed << setprecision(0)
+             << gia
+             << " |\n";
+    }
+};
