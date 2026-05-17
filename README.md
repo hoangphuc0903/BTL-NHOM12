@@ -331,3 +331,479 @@ public:
              << " |\n";
     }
 };
+template<class T>
+class DanhSach{
+private:
+    vector<T> ds;
+public:
+    void them(T x){
+        ds.push_back(x);
+    }
+    vector<T>& get(){
+        return ds;
+    }
+};
+
+class QuanLy{
+private:
+    DanhSach<BanBida> dsBan;
+    DanhSach<DoUong> dsDU;
+    DanhSach<HoaDon> dsHD;
+    vector<ConNguoi*> dsNguoi;
+public:
+    QuanLy(){
+        khoiTaoBan();
+        khoiTaoDU();
+    }
+
+    void khoiTaoBan(){
+
+        int ma = 1;
+    
+        // 3 ban Libre
+        for(int i=0;i<3;i++){
+            BanBida b;
+            b.setBan(ma++,"Libre",50000);
+            dsBan.them(b);
+        }
+    
+        // 4 ban Pool
+        for(int i=0;i<4;i++){
+            BanBida b;
+            b.setBan(ma++,"Pool",60000);
+            dsBan.them(b);
+        }
+    
+        // 2 ban Snooker
+        for(int i=0;i<2;i++){
+            BanBida b;
+            b.setBan(ma++,"Snooker",70000);
+            dsBan.them(b);
+        }
+    }
+
+    void khoiTaoDU(){
+        DoUong d1,d2,d3,d4;
+        d1.setDU(1,"Coca",15000);
+        d2.setDU(2,"Sting",15000);
+        d3.setDU(3,"Bo Hut",20000);
+        d4.setDU(4,"Nuoc Suoi",10000);
+        
+        dsDU.them(d1);
+        dsDU.them(d2);
+        dsDU.them(d3);
+        dsDU.them(d4);
+        
+    }
+
+    void hienThiBan(){
+        line(73);
+        cout << "| "
+             << left << setw(5)  << "Ma"
+             << "| "
+             << setw(15) << "Loai Ban"
+             << "| "
+             << setw(10) << "Gia"
+             << "| "
+             << setw(18) << "Khach"
+             << "| "
+             << setw(12) << "Trang Thai"
+             << " |\n";
+        line(73);
+        for(auto b : dsBan.get())
+            b.xuat();
+        line(73);
+    }
+    
+ void congDiemKhach(const string& ten, double tongTien){
+    for(auto p : dsNguoi){
+        KhachHang* kh = dynamic_cast<KhachHang*>(p);
+        if(kh && kh->getTen() == ten){
+            kh->congDiem(tongTien);
+            return;
+        }
+    }
+
+    cout << "\n[WARN] Khong tim thay khach hang de cong diem!\n";
+}
+void xemLichSuKhach(){
+    string ten =
+        nhapString("Nhap ten khach hang: ");
+    KhachHang* kh =
+        timKhachHang(ten);
+    if(kh){
+        kh->hienThiLichSu();
+    }
+    else{
+        cout << "Khong tim thay khach hang!\n";
+    }
+}
+	KhachHang* timKhachHang(const string& ten){
+	    for(auto p : dsNguoi){
+	        KhachHang* kh =
+	            dynamic_cast<KhachHang*>(p);
+	        if(kh && kh->getTen() == ten)
+	            return kh;
+	    }
+	    return nullptr;
+	}
+    void hienThiDU(){
+        line(43);
+        cout << "| "
+             << left << setw(5)  << "Ma"
+             << "| "
+             << setw(20) << "Ten"
+             << "| "
+             << setw(10) << "Gia"
+             << " |\n";
+        line(43);
+        for(auto d : dsDU.get())
+            d.xuat();
+        line(43);
+    }
+    void thongKeDoanhThu(){
+    double tong = 0;
+    for(auto h : dsHD.get()){
+        tong += h.getTongTien();
+    } 
+    line(40);
+    cout << "TONG DOANH THU: "
+         << tong
+         << " VND\n";
+    line(40);
+    }
+    void themNuocChoBan(BanBida &b){
+        hienThiDU();
+        int sl =
+            nhapInt("Nhap so loai nuoc: ");
+        for(int i=0;i<sl;i++){
+            int maDU =
+                nhapInt("Nhap ma do uong: ");
+            int soLuong =
+                nhapInt("Nhap so luong: ");
+            bool check = false;
+            for(auto d : dsDU.get()){
+                if(d.getMa() == maDU){
+                    double tien =
+                        d.getGia() * soLuong;
+                    b.themDoUong(
+                        d.getTen(),
+                        tien
+                    );
+                    check = true;
+                }
+            }
+            if(!check)
+                cout << "Khong tim thay do uong!\n";
+        }
+    }
+
+    void themNguoi(){
+        int chon = nhapInt("1.Hoi Vien 2.NV: \n");
+        ConNguoi* p;
+        if(chon == 1) p = new KhachHang();
+        else p = new NhanVien();
+        p->nhap();
+        dsNguoi.push_back(p);
+    }
+    void hienThiNguoi(){
+        // ===== KHACH HANG =====
+        line(55);
+        cout << "| "
+             << left << setw(15) << "Ten"
+             << "| "
+             << setw(12) << "SDT"
+             << "| "
+             << setw(8)  << "Diem"
+             << "| "
+             << setw(10) << "Hang"
+             << " |\n";
+        line(55);
+        for(auto p : dsNguoi){
+            KhachHang* kh =
+                dynamic_cast<KhachHang*>(p);
+            if(kh)
+                kh->xuat();
+        }
+        line(55);
+        cout << endl;
+        // ===== NHAN VIEN =====
+        line(60);
+        cout << "| "
+             << left << setw(15) << "Ten"
+             << "| "
+             << setw(12) << "SDT"
+             << "| "
+             << setw(12) << "Chuc Vu"
+             << "| "
+             << setw(10) << "Luong"
+             << " |\n";
+        line(60);
+        for(auto p : dsNguoi){
+            NhanVien* nv =
+                dynamic_cast<NhanVien*>(p);
+            if(nv)
+                nv->xuat();
+        }
+        line(60);
+    }
+    void moBan(){
+        int ma =
+            nhapInt("Nhap ma ban: ");
+        string ten =
+            nhapString("Nhap ten khach: ");
+        int h =
+            nhapInt("Nhap gio mo: ");
+        while(h < 0 || h > 23)
+            h = nhapInt("Nhap lai gio (0-23): ");
+        int p =
+            nhapInt("Nhap phut mo: ");
+        while(p < 0 || p > 59)
+            p = nhapInt("Nhap lai phut (0-59): ");
+        for(auto &b : dsBan.get()){
+            if(b.getMa() == ma){
+                try{
+                    b.moBan(ten,h,p);
+                    char c;
+                    cout << "Khach co goi nuoc khong? (y/n): ";
+                    cin >> c;
+                    if(c == 'y' || c == 'Y')
+                        themNuocChoBan(b);
+                    cout << "\nMo ban thanh cong!\n";
+                }catch(...){
+                    cout << "\nBan dang su dung!\n";
+                }
+                return;
+            }
+        }
+        cout << "\nKhong tim thay ban!\n";
+    }
+
+    void themNuoc(){
+        while(true){
+            int maBan =
+                nhapInt("Nhap ma ban: ");
+            bool timThay = false;
+            for(auto &b : dsBan.get()){
+                if(b.getMa() == maBan){
+                    timThay = true;
+                // KIEM TRA BAN DA MO CHUA
+                    if(!b.getTrangThai()){
+                        cout << "\nBan chua mo!\n";
+                        cout << "Vui long nhap lai.\n\n";
+                        break;
+                    }
+                    themNuocChoBan(b);
+                    cout << "\nThem nuoc thanh cong!\n";
+                    return;
+                }
+            }
+        if(!timThay){
+            cout << "\nKhong tim thay ban!\n";
+        }
+        }
+    }
+
+    void dongBan(){
+        int ma =
+            nhapInt("Nhap ma ban: ");
+        int h =
+            nhapInt("Nhap gio dong: ");
+        while(h < 0 || h > 23)
+            h = nhapInt("Nhap lai gio (0-23): ");
+        int p =
+            nhapInt("Nhap phut dong: ");
+            
+        while(p < 0 || p > 59)
+            p = nhapInt("Nhap lai phut (0-59): ");
+        for(auto &b : dsBan.get()){
+            if(b.getMa() == ma){
+                try{
+                    if(!b.getTrangThai())
+                        throw runtime_error("Ban chua mo!");
+
+                    string tenKhach =
+                    b.getTenKhach();
+                    string loai =
+                        b.getLoai();
+                    double giaBan =
+                        b.getGia();
+                    vector<pair<string,double>> nuoc =
+                        b.getDSNuoc();
+                    int hMo =
+                        b.getHMo();
+                    int pMo =
+                        b.getPMo();
+                    int mo =
+                        hMo * 60 + pMo;
+                    int dong =
+                        h * 60 + p;
+                    int tongPhut = dong - mo;
+                    if(tongPhut <= 0){
+                        cout << "\nGio dong phai lon hon gio mo!\n";
+                        return;
+                    }
+                    double soGio =
+                        tongPhut / 60.0;
+
+                    double tienBan =
+                        soGio * giaBan;
+                    double tienNuoc = 0;
+                    for(auto x : nuoc)
+                        tienNuoc += x.second;
+                    double tong =
+						tienBan + tienNuoc;
+						
+					// ===== GIAM GIA KHACH HANG =====
+						double giamGia = 0;
+						
+						KhachHang* kh =
+						    timKhachHang(tenKhach);
+						
+						if(kh){
+						    giamGia =
+						        tong * kh->layGiamGia();
+						    tong -= giamGia;
+						}
+						b.dongBan(h,p);
+					HoaDon hd(
+                        dsHD.get().size() + 1,
+                        ma,
+                        hMo,
+                        pMo,
+                        h,
+                        p,
+                        tong
+                    );
+                    dsHD.them(hd);
+                    congDiemKhach(tenKhach, tong);
+                    if(kh){
+                        string lichSu =
+                            "Ban " + to_string(ma) +
+                            " | Tong tien: " + to_string((int)tong) +
+                            " VND";
+                        kh->themLichSu(lichSu);
+                    }
+                    cout << "\n";
+                    line(60);
+                    cout << setw(38)
+                         << "HOA DON THANH TOAN\n";
+                    line(60);
+                    cout << left
+                         << setw(25)
+                         << "Ma ban:"
+                         << ma << endl;
+                    cout << left
+                         << setw(25)
+                         << "Loai ban:"
+                         << loai << endl;
+                    cout << left
+                         << setw(25)
+                         << "Gia ban / gio:"
+                         << giaBan
+                         << " VND\n";
+                    cout << left
+                         << setw(25)
+                         << "Khach hang:"
+                         << tenKhach << endl;
+                    cout << left
+                         << setw(25)
+                         << "Gio mo:";
+                    if(hMo < 10) cout << "0";
+                    cout << hMo << ":";
+                    if(pMo < 10) cout << "0";
+                    cout << pMo << endl;
+                    cout << left
+                         << setw(25)
+                         << "Gio dong:";
+                    if(h < 10) cout << "0";
+                    cout << h << ":";
+                    if(p < 10) cout << "0";
+                    cout << p << endl;
+
+                    int gio = tongPhut / 60;
+                    int phut = tongPhut % 60;
+                    cout << left
+                         << setw(25)
+                         << "Tong thoi gian:"
+                         << gio << " gio ";
+                    if(phut > 0)
+                        cout << phut << " phut";
+                    cout << endl;
+                    line(60);
+                    cout << "DO UONG DA GOI\n";
+                    line(60);
+                    if(nuoc.empty()){
+                        cout << "Khong co\n";
+                    }else{
+                        for(auto x : nuoc){
+                            cout << left
+                                 << setw(35)
+                                 << x.first;
+                            cout << x.second
+                                 << " VND\n";
+                        }
+                    }
+                    line(60);
+                    cout << left
+                         << setw(25)
+                         << "Tien ban:"
+                         << tienBan
+                         << " VND\n";
+                    cout << left
+                         << setw(25)
+                         << "Tien nuoc:"
+                         << tienNuoc
+                         << " VND\n";
+                    cout << left
+					     << setw(25)
+					     << "Giam gia:"
+					     << giamGia
+					     << " VND\n";
+                    cout << left
+                         << setw(25)
+                         << "Tong thanh toan:"
+                         << tong
+                         << " VND\n";
+                        int diemCong = tong / 10000;
+                    cout << left
+                         << setw(25)
+                         << "Diem duoc cong:"
+                         << diemCong << " diem\n";
+                        line(60);
+                }catch(...){
+                    cout << "\nBan chua mo!\n";
+                    }
+                    return;
+            }
+        }
+            cout << "\nKhong tim thay ban!\n";
+    }
+    void hienThiHD(){
+        line(45);
+        cout << "| "
+             << left << setw(5)  << "HD"
+             << "| "
+             << setw(5)  << "Ban"
+             << "| "
+             << setw(13) << "Thoi Gian"
+             << "| "
+             << setw(12) << "Tong Tien"
+             << " |\n";
+        line(45);
+        for(auto h : dsHD.get())
+            h.xuat();
+        line(45);
+    }
+    void thongTinBan(){
+        int ma =
+            nhapInt("Nhap ma ban: ");
+        for(auto &b : dsBan.get()){
+            if(b.getMa() == ma){
+                b.xuatChiTiet();
+                return;
+            }
+        }
+        cout << "Khong tim thay ban!\n";
+    }
+};
