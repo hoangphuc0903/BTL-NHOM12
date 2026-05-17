@@ -807,3 +807,68 @@ void xemLichSuKhach(){
         cout << "Khong tim thay ban!\n";
     }
 };
+int main(){
+    QuanLy ql;
+    int chon;
+    do{
+        line(50);
+        cout << "           QUAN LY QUAN BIDA\n";
+        line(50);
+        cout << "| 1. Danh sach ban                  |\n";
+        cout << "| 2. Menu do uong                   |\n";
+        cout << "| 3. Mo ban                         |\n";
+        cout << "| 4. Them do uong                   |\n";
+        cout << "| 5. Dong ban                       |\n";
+        cout << "| 6. Danh sach hoa don              |\n";
+        cout << "| 7. Thong tin 1 ban                |\n";
+        cout << "| 8. Them nguoi                     |\n";
+        cout << "| 9. Danh sach nguoi                |\n";
+        cout << "| 10. Lich su khach hang            |\n";
+        cout << "| 11. Thong ke doanh thu            |\n";
+        cout << "| 0. Thoat                          |\n";
+        line(50);
+        chon =
+            nhapInt("Nhap lua chon: ");
+        switch(chon){
+        case 1:
+            ql.hienThiBan();
+            break;
+        case 2:
+            ql.hienThiDU();
+            break;
+        case 3:
+            ql.moBan();
+            break;
+        case 4:
+            ql.themNuoc();
+            break;
+        case 5:
+            ql.dongBan();
+            break;
+        case 6:
+            ql.hienThiHD();
+            break;
+        case 7:
+            ql.thongTinBan();
+            break;
+        case 8:
+            ql.themNguoi();
+            break;
+        case 9:
+            ql.hienThiNguoi();
+            break;
+        case 10:
+            ql.xemLichSuKhach();
+            break;
+        case 11:
+            ql.thongKeDoanhThu();
+            break;
+        case 0:
+            cout << "\nThoat chuong trinh!\n";
+            break;
+        default:
+            cout << "\nLua chon khong hop le!\n";
+        }
+    }while(chon != 0);
+    return 0;
+}
