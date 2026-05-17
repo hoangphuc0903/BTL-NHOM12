@@ -154,3 +154,130 @@ public:
              << " |\n";
     }
 };
+class BanBida{
+private:
+    int ma;
+    string loai;
+    double gia;
+    bool trangThai;
+    string tenKhach;
+    int hMo,pMo;
+    int hDong,pDong;
+    vector<pair<string,double>> dsNuoc;
+public:
+    BanBida(){
+        trangThai = false;
+        hMo = 0;
+        pMo = 0;
+    }
+    bool getTrangThai() const{
+        return trangThai;
+    }
+    void setBan(int m,string l,double g){
+        ma = m;
+        loai = l;
+        gia = g;
+    }
+
+    int getMa() const{ return ma; }
+    int getHMo() const{ return hMo; }
+    int getPMo() const{ return pMo; }
+    int getHDong()const{ return hDong; }
+    int getPDong()const{ return pDong; }
+    string getLoai()const{ return loai; }
+    string getTenKhach() const{
+        return tenKhach;
+    }
+    vector<pair<string,double>> getDSNuoc() const{
+        return dsNuoc;
+    }
+    double getGia() const{
+        return gia;
+    }
+
+    void xuat() const{
+        cout << "| "
+             << left  << setw(5)  << ma
+             << "| "
+             << left  << setw(15) << loai
+             << "| "
+             << right << setw(10)
+             << fixed << setprecision(0)
+             << gia
+             << " | "
+             << left  << setw(18) << tenKhach
+             << "| "
+             << left  << setw(12)
+             << (trangThai ? "Dang choi" : "Con trong")
+             << " |\n";
+    }
+    void xuatChiTiet(){
+        line(50);
+        cout << "Ma ban      : " << ma << endl;
+        cout << "Loai ban    : " << loai << endl;
+        cout << "Gia / gio   : " << gia << endl;
+        if(trangThai){
+            cout << "Khach       : "
+                 << tenKhach << endl;
+            cout << "Trang thai  : Dang choi\n";
+            cout << "Gio mo      : ";
+            if(hMo < 10) cout << "0";
+            cout << hMo << ":";
+            if(pMo < 10) cout << "0";
+            cout << pMo << endl;
+            cout << "\nDo uong da goi:\n";
+            if(dsNuoc.empty()){
+                cout << "Khong co\n";
+            }else{
+                for(auto x : dsNuoc){
+                    cout << "- "
+                         << x.first
+                         << " : "
+                         << x.second
+                         << " VND\n";
+                }
+            }
+        }else{
+            cout << "Trang thai  : Con trong\n";
+        }
+        line(50);
+    }
+
+    void moBan(string ten,int h,int p){
+        if(trangThai)
+            throw runtime_error("Ban dang su dung!");
+        tenKhach = ten;
+        hMo = h;
+        pMo = p;
+        trangThai = true;
+    }
+    
+    void themDoUong(string ten,double tien){
+        dsNuoc.push_back({ten,tien});
+    }
+
+    double dongBan(int h,int p){
+        if(!trangThai)
+            throw runtime_error("Ban chua mo!");
+        hDong = h;
+        pDong = p;
+        int mo =
+            hMo * 60 + pMo;
+        int dong =
+            hDong * 60 + pDong;
+        int tongPhut =
+            dong - mo;
+        if(tongPhut <= 0)
+            tongPhut = 60;
+        double soGio =
+            tongPhut / 60.0;
+        double tong =
+            soGio * gia;
+        for(auto x : dsNuoc)
+            tong += x.second;
+        dsNuoc.clear();
+        trangThai = false;
+        tenKhach = "";
+        return tong;
+    }
+};
